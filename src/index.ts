@@ -69,9 +69,11 @@ export interface DecodeResult {
  * @returns The resolved transaction and parameters.
  */
 export function decode(steemUrl: string): DecodeResult {
-    const url = new URL(steemUrl)
-    if (url.protocol !== 'steem:') {
-        throw new Error(`Invalid protocol, expected 'steem:' got '${ url.protocol }'`)
+    const protocol = steemUrl.slice(0, 6)
+    // workaround for chrome not parsing custom protocols correctly
+    const url = new URL(steemUrl.replace(/^steem:/, 'http:'))
+    if (protocol !== 'steem:') {
+        throw new Error(`Invalid protocol, expected 'steem:' got '${ protocol }'`)
     }
     if (url.host !== 'sign') {
         throw new Error(`Invalid action, expected 'sign' got '${ url.host }'`)
