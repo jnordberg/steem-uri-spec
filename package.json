@@ -1,6 +1,6 @@
 {
   "name": "steem-uri",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Steem URI parser and encoder",
   "license": "MIT",
   "main": "./lib/index",
