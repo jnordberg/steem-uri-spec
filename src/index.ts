@@ -68,7 +68,7 @@ export interface DecodeResult {
  * @throws If the url can not be parsed.
  * @returns The resolved transaction and parameters.
  */
-export function decode(steemUrl: string): DecodeResult {
+function decode(steemUrl: string): DecodeResult {
     const protocol = steemUrl.slice(0, 6)
     // workaround for chrome not parsing custom protocols correctly
     const url = new URL(steemUrl.replace(/^steem:/, 'http:'))
@@ -155,7 +155,7 @@ const RESOLVE_PATTERN = /(__(ref_block_(num|prefix)|expiration|signer))/g
  * @param options Values to use when resolving.
  * @returns The resolved transaction and signer.
  */
-export function resolveTransaction(utx: UnresolvedTransaction, params: Parameters, options: ResolveOptions): ResolveResult {
+function resolveTransaction(utx: UnresolvedTransaction, params: Parameters, options: ResolveOptions): ResolveResult {
     const signer = params.signer || options.preferred_signer
     if (!options.signers.includes(signer)) {
         throw new Error(`Signer '${ signer }' not available`)
@@ -215,7 +215,7 @@ const CALLBACK_RESOLVE_PATTERN = /({{(sig|id|block|txn)}})/g
  * @param ctx Values to use when resolving.
  * @returns The resolved url.
  */
-export function resolveCallback(url: string, ctx: TransactionConfirmation) {
+function resolveCallback(url: string, ctx: TransactionConfirmation) {
     return url.replace(CALLBACK_RESOLVE_PATTERN, (_1, _2, m) => ctx[m] || '')
 }
 
@@ -244,16 +244,25 @@ function encodeJson(data: any) {
 }
 
 /** Encodes a Steem transaction to a steem: URI. */
-export function encodeTx(tx: Transaction, params: Parameters = {}) {
+function encodeTx(tx: Transaction, params: Parameters = {}) {
     return `steem://sign/tx/${ encodeJson(tx) }${ encodeParameters(params) }`
 }
 
 /** Encodes a Steem operation to a steem: URI. */
-export function encodeOp(op: Operation, params: Parameters = {}) {
+function encodeOp(op: Operation, params: Parameters = {}) {
     return `steem://sign/op/${ encodeJson(op) }${ encodeParameters(params) }`
 }
 
 /** Encodes several Steem operations to a steem: URI. */
-export function encodeOps(ops: Operation, params: Parameters = {}) {
+function encodeOps(ops: Operation, params: Parameters = {}) {
     return `steem://sign/ops/${ encodeJson(ops) }${ encodeParameters(params) }`
+}
+
+export default {
+    decode,
+    resolveTransaction,
+    resolveCallback,
+    encodeTx,
+    encodeOp,
+    encodeOps,
 }
